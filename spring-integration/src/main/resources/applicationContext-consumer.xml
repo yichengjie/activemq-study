@@ -10,12 +10,12 @@
     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- 配置能够产生connection的connectionfactory，由JMS对应的服务厂商提供 -->
-    <bean id="tagertConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <constructor-arg name="brokerURL" value="tcp://192.168.156.44:61616"/>
+    <bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <constructor-arg name="brokerURL" value="tcp://192.168.221.128:61616"/>
     </bean>
     <!-- 配置spring管理真正connectionfactory的connectionfactory，相当于spring对connectionfactory的一层封装 -->
     <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
-        <property name="targetConnectionFactory" ref="tagertConnectionFactory"/>
+        <property name="targetConnectionFactory" ref="targetConnectionFactory"/>
     </bean>
     <!-- 配置destination -->
     <!-- 队列目的地 -->

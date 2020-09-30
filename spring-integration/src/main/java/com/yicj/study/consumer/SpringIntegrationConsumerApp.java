@@ -6,7 +6,7 @@ import org.springframework.context.annotation.ImportResource;
 
 
 @SpringBootApplication
-@ImportResource("classpath:applicationContext-producer.xml")
+@ImportResource("classpath:applicationContext-consumer.xml")
 public class SpringIntegrationConsumerApp {
 
     public static void main(String[] args) {

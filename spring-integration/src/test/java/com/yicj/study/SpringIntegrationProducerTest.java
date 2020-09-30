@@ -9,7 +9,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import javax.jms.Destination;
+import javax.jms.*;
 
 @SpringBootTest(classes = SpringIntegrationProducerApp.class)
 @RunWith(SpringRunner.class)
@@ -22,6 +22,10 @@ public class SpringIntegrationProducerTest {
 
     @Test
     public void send(){
-        System.out.println(destination);
+        jmsTemplate.send(destination,session ->  {
+            TextMessage textMessage = session.createTextMessage("345");
+            return textMessage ;
+        });
+
     }
 }
