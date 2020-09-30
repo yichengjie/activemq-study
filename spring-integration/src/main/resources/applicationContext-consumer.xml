@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- 配置能够产生connection的connectionfactory，由JMS对应的服务厂商提供 -->
+    <bean id="tagertConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <constructor-arg name="brokerURL" value="tcp://192.168.156.44:61616"/>
+    </bean>
+    <!-- 配置spring管理真正connectionfactory的connectionfactory，相当于spring对connectionfactory的一层封装 -->
+    <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+        <property name="targetConnectionFactory" ref="tagertConnectionFactory"/>
+    </bean>
+    <!-- 配置destination -->
+    <!-- 队列目的地 -->
+    <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="spring-queue"/>
+    </bean>
+    <!-- 话题目的地 -->
+    <bean id="itemAddTopic" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg value="item-add-topic"/>
+    </bean>
+    <!-- 配置监听器 -->
+    <bean id="itemAddListener" class="com.yicj.study.consumer.listener.ItemAddListener"/>
+    <!-- 系统监听器 -->
+    <!--    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+            <property name="connectionFactory" ref="connectionFactory"/>
+            <property name="destination" ref="queueDestination"/>
+            <property name="messageListener" ref="myListener"/>
+        </bean> -->
+    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory"/>
+        <property name="destination" ref="itemAddTopic"/>
+        <property name="messageListener" ref="itemAddListener"/>
+    </bean>
+</beans>

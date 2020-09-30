@@ -6,7 +6,7 @@ import org.junit.Test;
 import javax.jms.*;
 import java.io.IOException;
 
-public class HelloWorldTest {
+public class HelloTopicMessageTest {
 
 
     @Test
@@ -21,11 +21,11 @@ public class HelloWorldTest {
         //4. 使用连接对象创建会话(session)对象
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         //5. 使用会话对象创建目标对象，包含queue和topic（一对一和一对多）
-        Queue queue = session.createQueue("test-queue");
+        Topic topic = session.createTopic("test-topic");
         //6. 使用会话对象创建一个消息对象
-        MessageProducer producer = session.createProducer(queue);
+        MessageProducer producer = session.createProducer(topic);
         //7. 使用会话对象创建一个消息
-        TextMessage textMessage = session.createTextMessage("hello ! test-queue");
+        TextMessage textMessage = session.createTextMessage("hello ! test-topic");
         //8. 发送消息
         producer.send(textMessage);
         //9. 关闭资源
@@ -35,7 +35,7 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void testMQConsumerQueue() throws JMSException, IOException {
+    public void testMQConsumerTopic() throws JMSException, IOException {
         //1. 创建工厂连接对象,需要绑定ip和端口
         ConnectionFactory connectionFactory =
                 new ActiveMQConnectionFactory("tcp://192.168.221.128:61616") ;
@@ -46,9 +46,9 @@ public class HelloWorldTest {
         //4. 使用连接对象创建会话(session)对象
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         //5. 使用会话对象创建目标对象，包含queue和topic（一对一和一对多）
-        Queue queue = session.createQueue("test-queue");
+        Topic topic = session.createTopic("test-topic");
         //6. 使用会话对象创建消费者对象
-        MessageConsumer consumer = session.createConsumer(queue);
+        MessageConsumer consumer = session.createConsumer(topic);
         //7. 想consumer对象中设置一个messageListener对象，用来接收消息
         consumer.setMessageListener(message ->{
             if(message instanceof TextMessage){
@@ -67,5 +67,4 @@ public class HelloWorldTest {
         session.close();
         connection.close();
     }
-
 }
